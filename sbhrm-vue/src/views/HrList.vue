@@ -1,12 +1,14 @@
 <template>
   <div>
-    <el-table :data="tableData">
-      <el-table-column prop="name" label="姓名" width="120">
+    <el-table :data="hrs">
+      <el-table-column width="100">
+        <template slot-scope="scope">
+          <img class="avatar-img" :src="scope.row.avatar" :alt="scope.row.name">
+        </template>
       </el-table-column>
-      <el-table-column prop="phone" label="Phone" width="140">
-      </el-table-column>
-      <el-table-column prop="address" label="地址">
-      </el-table-column>
+      <el-table-column prop="name" label="Name" width="120"/>
+      <el-table-column prop="phone" label="Phone" width="140"/>
+      <el-table-column prop="address" label="Address"/>
     </el-table>
   </div>
 </template>
@@ -30,9 +32,9 @@ export default {
   },
   methods: {
     initAllHrs() {
-      this.getRequest("/hr").then(resp => {
+      this.axios.get("/hr").then(resp => {
         if (resp) {
-          this.hrs = resp;
+          this.hrs = resp.data;
         }
       })
     }
@@ -41,5 +43,9 @@ export default {
 </script>
 
 <style scoped>
-
+.avatar-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 72px;
+}
 </style>
