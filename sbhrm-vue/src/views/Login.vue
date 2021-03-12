@@ -8,7 +8,8 @@
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)"
         :model="loginForm"
-        class="loginContainer">
+        class="loginContainer"
+        @keyup.enter.native="submitLogin">
       <h3 class="loginTitle">Sign in to Quick HR</h3>
       <el-form-item prop="username">
         <el-input size="normal" type="text" v-model="loginForm.username" auto-complete="off"
@@ -53,8 +54,11 @@ export default {
           // to stringify the data is one way to pass data to back-end in POST request
           this.axios.post('/login_process', qs.stringify(this.loginForm)).then(resp => {
             this.loading = false;
-            if (resp) {
-              console.log(resp)
+            if (resp && resp.status === 200) {
+              // console.log(resp);
+              this.$store.commit('login', resp.data.obj);
+              let path = this.$route.query.redirect;
+              this.$router.replace({path: path === '/login' || path === undefined ? '/' : path});
             }
           })
         } else {

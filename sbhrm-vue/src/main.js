@@ -24,12 +24,28 @@ const store = new Vuex.Store({
     currentUser: null
   },
   mutations: {
-
+    login(state, user){
+      state.currentUser = user;
+      localStorage.setItem('user', JSON.stringify(user));
+    },
+    logout(state){
+      state.currentUser = null;
+      localStorage.removeItem('user');
+    }
   }
 })
 
 new Vue({
   router,
   store,
+  mounted() {
+    if (localStorage.getItem('user')) {
+      try {
+        store.commit('login', JSON.parse(localStorage.getItem('user')));
+      } catch(e) {
+        store.commit('logout');
+      }
+    }
+  },
   render: h => h(App)
 }).$mount('#app')
