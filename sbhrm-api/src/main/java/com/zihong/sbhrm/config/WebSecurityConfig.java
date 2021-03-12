@@ -14,9 +14,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import java.io.PrintWriter;
 
@@ -64,35 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .and()
-                .formLogin()
-                .loginPage("/login_p")
-                .loginProcessingUrl("/login_process")
-                .failureHandler((request, response, exception) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = response.getWriter();
-                    RespUtils resp = RespUtils.error(
-                            exception instanceof LockedException ? "[FAIL] Login fail. Account is locked." :
-                            exception instanceof CredentialsExpiredException ? "[FAIL] Login fail. Password is expired." :
-                            exception instanceof AccountExpiredException ? "[FAIL] Login fail. Account is expired." :
-                            exception instanceof DisabledException ? "[FAIL] Login fail. Account is disabled." :
-                            exception instanceof BadCredentialsException ? "[FAIL] Login fail. Wrong username or password." :
-                            exception.getMessage());
-                    out.write(new ObjectMapper().writeValueAsString(resp));
-                    out.flush();
-                    out.close();
-                })
-                .successHandler((request, response, authentication) -> {
-                    response.setContentType("application/json;charset=utf-8");
-                    PrintWriter out = response.getWriter();
-
-                    Hr hr = (Hr) authentication.getPrincipal();
-                    hr.setPassword(null);
-
-                    out.write(new ObjectMapper().writeValueAsString(RespUtils.ok("[SUCCESS] login success", hr)));
-                    out.flush();
-                    out.close();
-                })
-                .and()
                 .logout()
                 .logoutSuccessHandler((req, resp, authentication) -> {
                     resp.setContentType("application/json;charset=utf-8");
@@ -106,5 +80,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe().rememberMeParameter("rememberMe")
                 .and()
                 .csrf().disable();  // by default Spring Security will block POST DELETE. disable csrf temporarily
+
+        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    UsernamePasswordAuthenticationFilter loginFilter() throws Exception {
+        UsernamePasswordAuthenticationFilter loginFilter = new UsernamePasswordAuthenticationFilter(authenticationManagerBean());
+        loginFilter.setFilterProcessesUrl("/login_process");
+        loginFilter.setPostOnly(true);
+        loginFilter.setAuthenticationSuccessHandler((request, response, authentication) -> {
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter out = response.getWriter();
+
+            Hr hr = (Hr) authentication.getPrincipal();
+            hr.setPassword(null);
+
+            out.write(new ObjectMapper().writeValueAsString(RespUtils.ok("[SUCCESS] login success", hr)));
+            out.flush();
+            out.close();
+        });
+        loginFilter.setAuthenticationFailureHandler((request, response, exception) -> {
+            response.setContentType("application/json;charset=utf-8");
+            PrintWriter out = response.getWriter();
+            RespUtils resp = RespUtils.error(
+                    exception instanceof LockedException ? "[FAIL] Login fail. Account is locked." :
+                    exception instanceof CredentialsExpiredException ? "[FAIL] Login fail. Password is expired." :
+                    exception instanceof AccountExpiredException ? "[FAIL] Login fail. Account is expired." :
+                    exception instanceof DisabledException ? "[FAIL] Login fail. Account is disabled." :
+                    exception instanceof BadCredentialsException ? "[FAIL] Login fail. Wrong username or password." :
+                    exception.getMessage());
+            out.write(new ObjectMapper().writeValueAsString(resp));
+            out.flush();
+            out.close();
+        });
+        ConcurrentSessionControlAuthenticationStrategy sessionStrategy = new ConcurrentSessionControlAuthenticationStrategy(new SessionRegistryImpl());
+        sessionStrategy.setMaximumSessions(1);
+        loginFilter.setSessionAuthenticationStrategy(sessionStrategy);
+        return loginFilter;
     }
 }
