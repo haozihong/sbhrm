@@ -3,11 +3,11 @@ package com.zihong.sbhrm.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zihong.sbhrm.pojo.Hr;
 import com.zihong.sbhrm.service.HrService;
+import com.zihong.sbhrm.utils.RespUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -57,17 +57,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler((request, response, exception) -> {
                     response.setContentType("application/json;charset=utf-8");
                     PrintWriter out = response.getWriter();
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("{\"status\":\"error\",\"msg\":\"");
-                    if (exception instanceof UsernameNotFoundException || exception instanceof BadCredentialsException) {
-                        sb.append("Login fail. Wrong username or password. ");
-                    } else if (exception instanceof DisabledException) {
-                        sb.append("Login fail. Account is disabled. ");
-                    } else {
-                        sb.append("Login fail.");
-                    }
-                    sb.append("\"}");
-                    out.write(sb.toString());
+                    RespUtils resp = RespUtils.error(
+                            exception instanceof LockedException ? "[FAIL] Login fail. Account is locked." :
+                            exception instanceof CredentialsExpiredException ? "[FAIL] Login fail. Password is expired." :
+                            exception instanceof AccountExpiredException ? "[FAIL] Login fail. Account is expired." :
+                            exception instanceof DisabledException ? "[FAIL] Login fail. Account is disabled." :
+                            exception instanceof BadCredentialsException ? "[FAIL] Login fail. Wrong username or password." :
+                            exception.getMessage());
+                    out.write(new ObjectMapper().writeValueAsString(resp));
                     out.flush();
                     out.close();
                 })
@@ -77,12 +74,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                     Hr hr = (Hr) authentication.getPrincipal();
                     hr.setPassword(null);
-                    Map<String, Object> res = new HashMap<>();
-                    res.put("status", 200);
-                    res.put("msg", "login success");
-                    res.put("obj", hr);
 
-                    out.write(new ObjectMapper().writeValueAsString(res));
+                    out.write(new ObjectMapper().writeValueAsString(RespUtils.ok("[SUCCESS] login success", hr)));
                     out.flush();
                     out.close();
                 })
@@ -91,8 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((req, resp, authentication) -> {
                     resp.setContentType("application/json;charset=utf-8");
                     PrintWriter out = resp.getWriter();
-                    String s = "{\"status\":\"success\",\"msg\": \"logout success\"}";
-                    out.write(s);
+                    out.write(new ObjectMapper().writeValueAsString(RespUtils.ok("[SUCCESS] logout success")));
                     out.flush();
                     out.close();
                 })
