@@ -87,7 +87,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.close();
                 })
                 .and()
-                .logout().permitAll()
+                .logout()
+                .logoutSuccessHandler((req, resp, authentication) -> {
+                    resp.setContentType("application/json;charset=utf-8");
+                    PrintWriter out = resp.getWriter();
+                    String s = "{\"status\":\"success\",\"msg\": \"logout success\"}";
+                    out.write(s);
+                    out.flush();
+                    out.close();
+                })
+                .permitAll()
                 .and()
                 .rememberMe().rememberMeParameter("rememberMe")
                 .and()
