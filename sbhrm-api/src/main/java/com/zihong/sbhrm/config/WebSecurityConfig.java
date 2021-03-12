@@ -79,6 +79,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     out.close();
                 })
                 .and()
-                .logout().permitAll();
+                .logout().permitAll()
+                .and()
+                .csrf().disable();  // by default Spring Security will block POST DELETE. disable csrf temporarily
     }
 }
