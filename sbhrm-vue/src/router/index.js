@@ -2,10 +2,17 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import HrList from "@/views/HrList";
+import Login from "@/views/Login";
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    hidden: true
+  },
   {
     path: '/',
     name: 'Home',
