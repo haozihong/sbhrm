@@ -1,5 +1,7 @@
 package com.zihong.sbhrm.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zihong.sbhrm.pojo.Hr;
 import com.zihong.sbhrm.service.HrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Zihong Hao
@@ -70,10 +74,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler((request, response, authentication) -> {
                     response.setContentType("application/json;charset=utf-8");
                     PrintWriter out = response.getWriter();
-                    // Hr hr = (Hr) authentication.getPrincipal();
-                    // hr.setPassword(null);
-                    String s = "{\"status\":\"success\",\"msg\": \"Login success. \"}";
-                    out.write(s);
+
+                    Hr hr = (Hr) authentication.getPrincipal();
+                    hr.setPassword(null);
+                    Map<String, Object> res = new HashMap<>();
+                    res.put("status", 200);
+                    res.put("msg", "login success");
+                    res.put("obj", hr);
+
+                    out.write(new ObjectMapper().writeValueAsString(res));
                     out.flush();
                     out.close();
                 })
