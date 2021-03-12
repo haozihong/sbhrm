@@ -9,6 +9,14 @@
       <el-table-column prop="name" label="Name" width="120"/>
       <el-table-column prop="phone" label="Phone" width="140"/>
       <el-table-column prop="address" label="Address"/>
+      <el-table-column label="Operation">
+        <template slot-scope="scope">
+          <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.row)">Delete</el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -37,6 +45,24 @@ export default {
           this.hrs = resp.data;
         }
       })
+    },
+    handleDelete(hr) {
+      this.$confirm('Deleting **'+hr.name+'** permanently', 'Warning', {
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.axios.delete("/hr/" + hr.id).then(resp => {
+          if (resp) {
+            this.initAllHrs();
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Deleting cancelled'
+        });
+      });
     }
   }
 }
