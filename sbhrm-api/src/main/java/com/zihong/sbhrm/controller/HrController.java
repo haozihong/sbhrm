@@ -19,8 +19,16 @@ public class HrController {
     }
 
     @GetMapping("/{id}")
-    public Hr getHrById(@PathVariable Integer id) {
+    public Hr getHrById(@PathVariable("id") Integer id) {
         return hrService.getHrById(id);
+    }
+
+    @PostMapping("")
+    public Integer addHr(@RequestBody Hr hr) {
+        if (hrService.addHr(hr) == 1) {
+            return 0;  // success
+        }
+        return 1;  // fail
     }
 
     @PutMapping("")
@@ -32,7 +40,7 @@ public class HrController {
     }
 
     @DeleteMapping("/{id}")
-    public Integer deleteHrById(@PathVariable Integer id) {
+    public Integer deleteHrById(@PathVariable("id") Integer id) {
         if (hrService.deleteHrById(id) == 1) {
             return 0;
         }

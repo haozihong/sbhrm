@@ -37,6 +37,10 @@ public class HrService implements UserDetailsService {
         return hrMapper.getAllHrs(-1, keywords);
     }
 
+    public Integer addHr(Hr hr) {
+        return hrMapper.insertSelective(hr);
+    }
+
     public Integer updateHr(Hr hr) {
         return hrMapper.updateByPrimaryKeySelective(hr);
     }
