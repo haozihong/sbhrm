@@ -5,8 +5,6 @@
         ref="loginForm"
         v-loading="loading"
         element-loading-text="Logging in..."
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
         :model="loginForm"
         class="loginContainer"
         @keyup.enter.native="submitLogin">
