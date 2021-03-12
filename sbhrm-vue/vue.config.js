@@ -1,11 +1,13 @@
 let proxyObj = {};
-proxyObj['/'] = {
+proxyObj['/hr'] = {
     ws: false,
     target: 'http://localhost:8081',
-    changeOrigin: true,
-    pathRewrite: {
-        '^/': ''
-    }
+    changeOrigin: true
+}
+proxyObj['/login_process'] = {
+    ws: false,
+    target: 'http://localhost:8081',
+    changeOrigin: true
 }
 module.exports = {
     devServer: {
