@@ -52,9 +52,9 @@ export default {
           // to stringify the data is one way to pass data to back-end in POST request
           this.axios.post('/login_process', qs.stringify(this.loginForm)).then(resp => {
             this.loading = false;
+            // console.log(resp);
             if (resp && resp.status === 200) {
-              // console.log(resp);
-              this.$store.commit('login', resp.data.obj);
+              this.$store.commit('login', resp.obj);
               let path = this.$route.query.redirect;
               this.$router.replace({path: path === '/login' || path === undefined ? '/' : path});
             }

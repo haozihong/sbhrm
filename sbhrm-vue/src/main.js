@@ -50,6 +50,28 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+// handle all errors here
+axios.interceptors.response.use(success => {
+  if (success.status && success.status === 200 && success.data.status === 500) {
+    ElementUI.Message.error({message: success.data.msg})
+  } else if (success.data.msg) {
+    ElementUI.Message.success({message: success.data.msg})
+  }
+  return success.data;
+}, error => {
+  if (error.response.status === 401) {
+    ElementUI.Message.error({message: error.response.data.msg ? error.response.data.msg : 'Please log in.'})
+    router.replace('/login');
+  } else {
+    if (error.response.data.msg) {
+      ElementUI.Message.error({message: error.response.data.msg})
+    } else {
+      ElementUI.Message.error({ message: `${error.response.status}: ${error.response.statusText}` })
+    }
+  }
+  return;
+})
+
 new Vue({
   router,
   store,
