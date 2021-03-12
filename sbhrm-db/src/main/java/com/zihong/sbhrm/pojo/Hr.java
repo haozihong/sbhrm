@@ -29,6 +29,8 @@ public class Hr implements UserDetails {
 
     private String address;
 
+    // getEnabled() and isEnabled() can't be at the same time (breaks the JavaBeans specification)
+    @Getter(AccessLevel.NONE)
     private Boolean enabled;
 
     private String username;
@@ -38,13 +40,16 @@ public class Hr implements UserDetails {
     private String avatar;
 
     private String remark;
+
     private List<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        if (roles != null) {
+            for (Role role : roles) {
+                authorities.add(new SimpleGrantedAuthority(role.getName()));
+            }
         }
         return authorities;
     }
@@ -66,6 +71,6 @@ public class Hr implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return enabled != null ? enabled : true;
     }
 }
