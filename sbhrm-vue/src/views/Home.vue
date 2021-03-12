@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <el-container>
-      <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+      <el-aside width="200px">
         <el-menu :default-openeds="['1', '2']">
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-user"></i>User Info</template>
@@ -37,24 +37,27 @@
       </el-aside>
 
       <el-container>
-        <el-header style="text-align: right; font-size: 12px">
-          <el-dropdown>
-            <i class="el-icon-setting" style="margin-right: 15px"></i>
+        <el-header id="home-header">
+          <div class="title">Quick HR</div>
+          <el-dropdown trigger="click"  @command="handleCommand">
+            <span id="user-corner" class="el-dropdown-link">
+              {{$store.state.currentUser.name}}
+              <i><img :src="$store.state.currentUser.avatar" alt=""></i>
+            </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>查看</el-dropdown-item>
-              <el-dropdown-item>新增</el-dropdown-item>
-              <el-dropdown-item>删除</el-dropdown-item>
+              <el-dropdown-item command="userinfo">User Info</el-dropdown-item>
+              <el-dropdown-item command="setting">Setting</el-dropdown-item>
+              <el-dropdown-item command="logout" divided>Log out</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <span>王小虎</span>
         </el-header>
 
         <el-main>
-          <el-breadcrumb separator-class="el-icon-arrow-right" v-if="this.$router.currentRoute.path!='/'">
+          <el-breadcrumb separator-class="el-icon-arrow-right" v-if="this.$router.currentRoute.path!=='/'">
             <el-breadcrumb-item :to="{ path: '/' }">Home</el-breadcrumb-item>
             <el-breadcrumb-item>{{this.$router.currentRoute.name}}</el-breadcrumb-item>
           </el-breadcrumb>
-          <div class="homeWelcome" v-if="this.$router.currentRoute.path=='/'">
+          <div class="homeWelcome" v-if="this.$router.currentRoute.path==='/'">
             Welcome to Quick HR!
           </div>
           <router-view class="homeRouterView"/>
@@ -65,22 +68,29 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
   name: 'Home',
   components: {
+  },
+  methods: {
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.$confirm('Are you sure?', 'Logging out', {
+          confirmButtonText: 'Log out',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.axios.get("/logout");
+          this.$store.commit('logout')
+          this.$router.replace("/login");
+        });
+      }
+    }
   }
 }
 </script>
 
 <style>
-.el-header {
-  background-color: #B3C0D1;
-  color: #333;
-  line-height: 60px;
-}
-
 .homeRouterView {
   margin-top: 10px;
 }
@@ -92,7 +102,7 @@ export default {
   padding-top: 50px;
 }
 
-.homeHeader {
+#home-header {
   background-color: #409eff;
   display: flex;
   align-items: center;
@@ -101,13 +111,9 @@ export default {
   box-sizing: border-box;
 }
 
-.homeHeader .title {
+#home-header .title {
   font-size: 30px;
   color: #ffffff
-}
-
-.homeHeader .userInfo {
-  cursor: pointer;
 }
 
 .el-dropdown-link img {
@@ -118,6 +124,7 @@ export default {
 }
 
 .el-dropdown-link {
+  cursor: pointer;
   display: flex;
   align-items: center;
 }
