@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,9 @@ import java.util.List;
 public class HrService implements UserDetailsService {
     @Autowired
     HrMapper hrMapper;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -49,12 +53,16 @@ public class HrService implements UserDetailsService {
         return hrMapper.deleteByPrimaryKey(id);
     }
 
-    public Integer updatePasswd(Integer hrid, String oldPwd, String pwd) {
-        // TODO: 2021/03/10 verify old password and encode the new one
-        return null;
+    public Boolean updatePwd(Integer id, String oldPwd, String pwd) {
+        Hr hr = hrMapper.selectByPrimaryKey(id);
+        if (passwordEncoder.matches(oldPwd, hr.getPassword())) {
+            Integer result = hrMapper.updatePasswd(id, passwordEncoder.encode(pwd));
+            return result == 1;
+        }
+        return false;
     }
 
-    public Integer updateAvatar(String url, Integer id) {
+    public Integer updateAvatar(Integer id, String url) {
         return hrMapper.updateAvatar(url, id);
     }
 }
