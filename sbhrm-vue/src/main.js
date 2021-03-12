@@ -21,7 +21,10 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    currentUser: null
+    currentUser: {
+      name: '',
+      avatar: ''
+    }
   },
   mutations: {
     login(state, user){
@@ -29,7 +32,7 @@ const store = new Vuex.Store({
       localStorage.setItem('user', JSON.stringify(user));
     },
     logout(state){
-      state.currentUser = null;
+      state.currentUser = { name: '', avatar: '' };
       localStorage.removeItem('user');
     }
   }
