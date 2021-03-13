@@ -7,21 +7,13 @@
         </div>
         <div>
           <div style="display: flex;justify-content: center">
-            <!--<el-upload-->
-            <!--    :show-file-list="false"-->
-            <!--    :on-success="onSuccess"-->
-            <!--    :data="hr"-->
-            <!--    action="/user/avatar">-->
-            <!--  &lt;!&ndash;<img title="Click to set new avatar" :src="hr.avatar" style="width: 100px;height: 100px;border-radius: 50px"&ndash;&gt;-->
-            <!--  &lt;!&ndash;     alt="">&ndash;&gt;-->
-            <!--</el-upload>-->
             <el-button type="text" @click="updateAvatarUrlDialogVisible = true">
               <el-avatar :size="100" :src="hr.avatar">
                 <img src="../assets/avatar-default.png"/>
               </el-avatar>
             </el-button>
           </div>
-          <table>
+          <table style="margin-bottom: 1rem">
             <tr>
               <td><el-tag>Phone</el-tag></td>
               <td>{{hr.phone}}</td>
@@ -37,8 +29,8 @@
             <tr>
               <td><el-tag>Roles</el-tag></td>
               <td>
-                <span type="success" style="margin-right: 5px" v-for="(r,index) in hr.roles" :key="index">
-                  {{r.nameZh}}
+                <span style="margin-right: 0.3rem" v-for="(role, index) in hr.roles" :key="index">
+                  <el-tag type="success">{{role.title}}</el-tag>
                 </span>
                 <el-button type="text" disabled v-if="!hr.roles">No roles</el-button>
               </td>
