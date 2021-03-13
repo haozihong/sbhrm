@@ -7,8 +7,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Routes for managing hrs. Need authorization.
+ *
+ * @author Zihong Hao
+ * @github https://github.com/haozihong
+ * @date 2021-03-12 14:47
+ */
 @RestController
-@RequestMapping("/hr")
+@RequestMapping("/admin/hr")
 public class HrController {
     @Autowired
     HrService hrService;
