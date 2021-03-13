@@ -27,11 +27,11 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    login(state, user){
+    setCurrentUser(state, user){
       state.currentUser = user;
       localStorage.setItem('user', JSON.stringify(user));
     },
-    logout(state){
+    clearCurrentUser(state){
       state.currentUser = { name: '', avatar: '' };
       localStorage.removeItem('user');
     }
@@ -78,9 +78,9 @@ new Vue({
   mounted() {
     if (localStorage.getItem('user')) {
       try {
-        store.commit('login', JSON.parse(localStorage.getItem('user')));
+        store.commit('setCurrentUser', JSON.parse(localStorage.getItem('user')));
       } catch(e) {
-        store.commit('logout');
+        store.commit('clearCurrentUser');
       }
     }
   },

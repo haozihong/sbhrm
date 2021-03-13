@@ -54,7 +54,7 @@ export default {
             this.loading = false;
             // console.log(resp);
             if (resp && resp.status === 200) {
-              this.$store.commit('login', resp.obj);
+              this.$store.commit('setCurrentUser', resp.obj);
               let path = this.$route.query.redirect;
               this.$router.replace({path: path === '/login' || path === undefined ? '/' : path});
             }

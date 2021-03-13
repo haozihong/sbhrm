@@ -81,7 +81,7 @@ export default {
           type: 'warning'
         }).then(() => {
           this.axios.get("/logout");
-          this.$store.commit('logout')
+          this.$store.commit('clearCurrentUser')
           this.$router.replace("/login");
         });
       }
