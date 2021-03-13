@@ -4,10 +4,9 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/sbhrm?useUnicode=true&characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-  profiles:
-    active: dev
-#mybatis:
-#  type-aliases-package: com.zihong.sbhrm.db.pojo
-#  mapper-locations: classpath:com/zihong/sbmall/mapper/*.xml
 server:
   port: 8081
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
