@@ -16,8 +16,8 @@
     <resultMap id="HrWithRoles" type="com.zihong.sbhrm.pojo.Hr" extends="BaseResultMap">
         <collection property="roles" ofType="com.zihong.sbhrm.pojo.Role">
             <id column="rid" property="id"/>
-            <result column="rname" property="name"/>
-            <result column="rnameZh" property="nameZh"/>
+            <result column="rrole" property="role"/>
+            <result column="rtitle" property="title"/>
         </collection>
     </resultMap>
     <sql id="Base_Column_List">
@@ -28,7 +28,7 @@
     </select>
     <select id="getAllHrs" resultMap="HrWithRoles">
         select hr.id, hr.name, hr.phone, hr.telephone, hr.address, hr.enabled, hr.username, hr.avatar,
-        hr.remark,r.`id` as rid,r.`name` as rname,r.`nameZh` as rnameZh
+        hr.remark,r.`id` as rid,r.role as rrole,r.`title` as rtitle
         from hr left join hr_role hrr
             on hr.`id`=hrr.`hrid`
         left join role r
@@ -40,7 +40,9 @@
         order by hr.id
     </select>
     <select id="getHrRolesById" resultType="com.zihong.sbhrm.pojo.Role">
-        select r.* from role r,hr_role hrr where hrr.`rid`=r.`id` and hrr.`hrid`=#{id}
+        select r.*
+        from hr_role hrr left join role r on r.id = hrr.rid
+        where hrr.hrid = #{id}
     </select>
     <select id="loadUserByUsername" resultMap="BaseResultMap">
         select * from hr where username=#{username}

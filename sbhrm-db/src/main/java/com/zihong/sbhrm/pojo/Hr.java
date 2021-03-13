@@ -48,7 +48,7 @@ public class Hr implements UserDetails {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (roles != null) {
             for (Role role : roles) {
-                authorities.add(new SimpleGrantedAuthority(role.getName()));
+                authorities.add(new SimpleGrantedAuthority(role.getRole()));
             }
         }
         return authorities;
