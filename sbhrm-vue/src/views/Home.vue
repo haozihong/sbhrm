@@ -47,7 +47,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="userinfo">User Info</el-dropdown-item>
               <el-dropdown-item command="setting">Setting</el-dropdown-item>
-              <el-dropdown-item command="logout" divided>Log out</el-dropdown-item>
+              <el-dropdown-item command="logout" divided>Sign out</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-header>
@@ -127,6 +127,7 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
+  color: #ffffff;
 }
 
 </style>
