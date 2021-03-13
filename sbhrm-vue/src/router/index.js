@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import HrList from "@/views/HrList";
 import Login from "@/views/Login";
+import UserInfo from "@/views/UserInfo";
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,12 @@ const routes = [
         name: 'All HR',
         component: HrList
       },
+      {
+        path: '/userinfo',
+        name: 'UserInfo',
+        component: UserInfo,
+        hidden: true
+      }
     ]
   }
 ]

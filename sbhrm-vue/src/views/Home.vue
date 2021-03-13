@@ -84,6 +84,8 @@ export default {
           this.$store.commit('clearCurrentUser')
           this.$router.replace("/login");
         });
+      } else if (command === 'userinfo') {
+        this.$router.push('/userinfo');
       }
     }
   }

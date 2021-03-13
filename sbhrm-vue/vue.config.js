@@ -14,6 +14,12 @@ proxyObj['/logout'] = {
     target: 'http://localhost:8081',
     changeOrigin: true
 }
+proxyObj['/user/'] = {
+    ws: false,
+    target: 'http://localhost:8081',
+    changeOrigin: true
+}
+
 module.exports = {
     devServer: {
         host: 'localhost',
