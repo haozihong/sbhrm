@@ -25,13 +25,7 @@
 export default {
   name: "HrList",
   data() {
-    const item = {
-      phone: '123123123',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    };
     return {
-      tableData: Array(20).fill(item),
       hrs: []
     }
   },
@@ -40,9 +34,9 @@ export default {
   },
   methods: {
     initAllHrs() {
-      this.axios.get("/hr").then(resp => {
+      this.axios.get("/admin/hr").then(resp => {
         if (resp) {
-          this.hrs = resp.data;
+          this.hrs = resp;
         }
       })
     },
@@ -52,7 +46,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
-        this.axios.delete("/hr/" + hr.id).then(resp => {
+        this.axios.delete("/admin/hr/" + hr.id).then(resp => {
           if (resp) {
             this.initAllHrs();
           }

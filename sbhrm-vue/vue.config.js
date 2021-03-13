@@ -1,5 +1,5 @@
 let proxyObj = {};
-proxyObj['/hr'] = {
+proxyObj['/admin/hr'] = {
     ws: false,
     target: 'http://localhost:8081',
     changeOrigin: true
