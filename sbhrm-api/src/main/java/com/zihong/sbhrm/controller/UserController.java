@@ -1,6 +1,6 @@
 package com.zihong.sbhrm.controller;
 
-import com.sun.istack.internal.NotNull;
+import org.springframework.lang.NonNull;
 import com.zihong.sbhrm.pojo.Hr;
 import com.zihong.sbhrm.service.HrService;
 import com.zihong.sbhrm.utils.RespUtils;
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @PutMapping("/pwd")
-    public RespUtils updateHrPwd(@RequestParam("oldPwd") @NotNull String oldPwd, @RequestParam("pwd") @NotNull String pwd, Authentication authentication) {
+    public RespUtils updateHrPwd(@RequestParam("oldPwd") @NonNull String oldPwd, @RequestParam("pwd") @NonNull String pwd, Authentication authentication) {
         if (pwd == null || pwd.length() < 1) {
             return RespUtils.error("[FAIL] invalid new password");
         }
@@ -56,8 +56,8 @@ public class UserController {
     }
 
     @PostMapping("/avatarUrl")
-    public RespUtils updateHrAvatarUrl(@RequestParam("avatar") @NotNull String avatarUrl, Authentication authentication) {
-        if (avatarUrl == null || avatarUrl.length() < 1) {
+    public RespUtils updateHrAvatarUrl(@RequestParam("avatar") @NonNull String avatarUrl, Authentication authentication) {
+        if (avatarUrl.length() < 1) {
             return RespUtils.error("[FAIL] invalid avatar url");
         }
         Hr hr = (Hr) authentication.getPrincipal();
