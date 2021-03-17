@@ -1,7 +1,7 @@
 package com.zihong.sbhrm;
 
-import com.zihong.sbhrm.mapper.HrMapper;
 import com.zihong.sbhrm.mapper.MenuMapper;
+import com.zihong.sbhrm.service.MenuService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,12 +17,14 @@ public class SbhrmTest {
     MenuMapper menuMapper;
 
     @Autowired
-    HrMapper hrMapper;
+    MenuService menuService;
 
     @Test
     public void testMenu() {
-        System.out.println(menuMapper.getMenuTreeWithChildren());
         System.out.println(menuMapper.getAllMenusWithRole());
-        System.out.println(menuMapper.getMenuTreeWithChildrenByHrid(3));
+        System.out.println(menuMapper.getMenuTreeWithChildren());
+
+        System.out.println(menuMapper.getMenuTreeWithChildrenByHrid(5));
+        System.out.println(menuService.getMenuTreeWithChildrenByHrid(5));
     }
 }
