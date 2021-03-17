@@ -2,37 +2,13 @@
   <div class="home">
     <el-container>
       <el-aside width="200px">
-        <el-menu :default-openeds="['1', '2']">
-          <el-submenu index="1">
-            <template slot="title"><i class="el-icon-user"></i>User Info</template>
-            <el-menu-item index="1-1">
-              <router-link to="/hr/basic">Basic Info</router-link>
+        <el-menu router unique-opened v-if="$store.state.routes">
+          <el-submenu v-for="(item, index) in $store.state.routes" :index="'' + (index + 1)" :key="index">
+            <template slot="title"><i :class="item.iconCls"></i>{{ item.name }}</template>
+            <el-menu-item v-for="(child, index2) in item.children" :index="child.frontendRoute" :key="index2">
+              {{ child.name }}
             </el-menu-item>
           </el-submenu>
-          <el-submenu index="2">
-            <template slot="title"><i class="el-icon-menu"></i>HR Management</template>
-            <el-menu-item index="2-1">
-              <router-link to="/hr/list">All HR</router-link>
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title"><i class="el-icon-setting"></i>Navi III</template>
-            <el-menu-item-group>
-              <template slot="title">Group 1</template>
-              <el-menu-item index="3-1">Option 1</el-menu-item>
-              <el-menu-item index="3-2">Option 2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="Group 2">
-              <el-menu-item index="3-3">Option 3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="3-4">
-              <template slot="title">Option 4</template>
-              <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item index="4">
-            <router-link to="/about"><i class="el-icon-info"></i>About</router-link>
-          </el-menu-item>
         </el-menu>
       </el-aside>
 
@@ -72,10 +48,13 @@ export default {
   name: 'Home',
   components: {
   },
+  mounted() {
+    this.getMenuFromServer();
+  },
   methods: {
     handleCommand(command) {
       if (command === 'logout') {
-        this.$confirm('Are you sure?', 'Logging out', {
+        this.$confirm('Are you sure?', 'Signing out', {
           confirmButtonText: 'Log out',
           cancelButtonText: 'Cancel',
           type: 'warning'
@@ -87,6 +66,13 @@ export default {
       } else if (command === 'userinfo') {
         this.$router.push('/userinfo');
       }
+    },
+    getMenuFromServer() {
+      this.axios.get('/menu/menuTree').then(resp => {
+        if (resp) {
+          this.$store.commit('setRoutes', resp.children);
+        }
+      });
     }
   }
 }

@@ -24,7 +24,8 @@ const store = new Vuex.Store({
     currentUser: {
       name: '',
       avatar: ''
-    }
+    },
+    routes: []
   },
   mutations: {
     setCurrentUser(state, user){
@@ -34,6 +35,9 @@ const store = new Vuex.Store({
     clearCurrentUser(state){
       state.currentUser = { name: '', avatar: '' };
       localStorage.removeItem('user');
+    },
+    setRoutes(state, routes) {
+      state.routes = routes;
     }
   }
 })
@@ -69,7 +73,6 @@ axios.interceptors.response.use(success => {
       ElementUI.Message.error({ message: `${error.response.status}: ${error.response.statusText}` })
     }
   }
-  return;
 })
 
 new Vue({

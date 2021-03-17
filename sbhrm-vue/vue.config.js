@@ -19,6 +19,11 @@ proxyObj['/user/'] = {
     target: 'http://localhost:8081',
     changeOrigin: true
 }
+proxyObj['/menu'] = {
+    ws: false,
+    target: 'http://localhost:8081',
+    changeOrigin: true
+}
 
 module.exports = {
     devServer: {
