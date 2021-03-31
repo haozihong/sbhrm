@@ -66,6 +66,7 @@ axios.interceptors.response.use(success => {
 }, error => {
   if (error.response.status === 401 || error.response.status === 403) {
     ElementUI.Message.error({message: error.response.data.msg ? error.response.data.msg : 'Please log in.'})
+    store.commit('clearCurrentUser')
     router.replace('/login');
   } else {
     if (error.response.data.msg) {
