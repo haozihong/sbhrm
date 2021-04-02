@@ -30,5 +30,6 @@ module.exports = {
         host: 'localhost',
         port: 8080,
         proxy: proxyObj
-    }
+    },
+    assetsDir: "assets"
 }
