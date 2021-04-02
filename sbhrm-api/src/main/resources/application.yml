@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: dev
+server:
+  compression:
+    enabled: true
 #mybatis:
 #  type-aliases-package: com.zihong.sbhrm.db.pojo
 #  mapper-locations: classpath:com/zihong/sbmall/mapper/*.xml

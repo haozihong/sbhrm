@@ -1,1 +1,1 @@
-web java -Dserver.port=$PORT $JAVA_OPTS -jar sbhrm-api/target/*.jar
+web java -Dserver.port=$PORT $JAVA_OPTS -jar sbhrm-api/target/*.jar --spring.profiles.active=prod
