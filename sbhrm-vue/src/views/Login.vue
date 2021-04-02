@@ -9,6 +9,7 @@
         class="loginContainer"
         @keyup.enter.native="submitLogin">
       <h3 class="loginTitle">Sign in to Quick HR</h3>
+      <p style="font-size: 0.75rem; text-align: center; color: #888">Sample account: username <strong>bob</strong> | password <strong>123</strong></p>
       <el-form-item prop="username">
         <el-input size="normal" type="text" v-model="loginForm.username" auto-complete="off"
                   placeholder="Username"></el-input>
