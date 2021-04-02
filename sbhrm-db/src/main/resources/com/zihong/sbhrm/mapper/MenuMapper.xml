@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zihong.sbhrm.mapper.MenuMapper" >
+
+    <resultMap id="BaseResultMap" type="com.zihong.sbhrm.pojo.Menu" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="serverRoute" property="serverRoute" jdbcType="VARCHAR" />
+        <result column="frontendRoute" property="frontendRoute" jdbcType="VARCHAR" />
+        <result column="component" property="component" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="iconCls" property="iconCls" jdbcType="VARCHAR" />
+        <result column="parentId" property="parentId" jdbcType="INTEGER" />
+        <result column="enabled" property="enabled" jdbcType="BIT" />
+        <association property="meta" javaType="com.zihong.sbhrm.pojo.Meta">
+            <result column="keepAlive" property="keepAlive" jdbcType="BIT" />
+            <result column="requireAuth" property="requireAuth" jdbcType="BIT" />
+        </association>
+    </resultMap>
+
+    <resultMap id="MenuWithRole" type="com.zihong.sbhrm.pojo.Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="com.zihong.sbhrm.pojo.Role">
+            <id column="rid" property="id"/>
+            <result column="rrole" property="role"/>
+            <result column="rtitle" property="title"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="MenuWithChildren" type="com.zihong.sbhrm.pojo.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="MenuWithChildren"
+                    column="id" select="getMenuByParentId">
+        </collection>
+    </resultMap>
+
+    <resultMap id="MenuWithChildrenByHrid" type="com.zihong.sbhrm.pojo.Menu" extends="BaseResultMap">
+        <collection property="children" ofType="MenuWithChildren"
+                    column="{parentId=id, hrid=hrid}" select="getMenuByParentIdAndHrid">
+        </collection>
+    </resultMap>
+
+    <select id="getMenuTreeWithChildren" resultMap="MenuWithChildren">
+        select * from menu where parentId IS NULL
+    </select>
+
+    <select id="getMenuByParentId" resultMap="MenuWithChildren">
+        select * from menu where parentId = #{parentId}
+    </select>
+
+    <select id="getMenuTreeWithChildrenByHrid" resultMap="MenuWithChildrenByHrid">
+        select menu.*, #{hrid} as hrid
+        from menu where parentId IS NULL
+    </select>
+
+    <select id="getMenuByParentIdAndHrid" resultMap="MenuWithChildrenByHrid">
+        select m.*, #{hrid} as hrid
+        from menu m left join menu_role mr on m.id = mr.mid left join hr_role hrr on mr.rid = hrr.rid
+        where m.parentId = #{parentId} and (mr.rid is null or hrr.hrid=#{hrid})
+    </select>
+
+    <select id="getAllMenusWithRole" resultMap="MenuWithRole">
+        select m.*, r.`id` as rid, r.`role` as rrole, r.`title` as rtitle
+        from menu m left join menu_role mr on m.id = mr.mid left join role r on r.id = mr.rid
+    </select>
+
+    <!--<select id="getMenusByHrId" resultMap="MenuWithChildren">-->
+    <!--    select distinct m1.*,m2.`id` as id2,m2.`component` as component2,m2.`enabled` as enabled2,m2.`iconCls` as iconCls2,m2.`keepAlive` as keepAlive2,m2.`name` as name2,m2.`parentId` as parentId2,m2.`requireAuth` as requireAuth2,m2.`path` as path2-->
+    <!--    from menu m1,menu m2,hr_role hrr,menu_role mr-->
+    <!--    where m1.`id`=m2.`parentId` and hrr.`hrid`=#{hrid} and hrr.`rid`=mr.`rid` and mr.`mid`=m2.`id` and m2.`enabled`=true order by m1.`id`,m2.`id`-->
+    <!--</select>-->
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select * from menu where id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from menu
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.zihong.sbhrm.pojo.Menu" >
+        insert into menu (serverRoute, frontendRoute,
+                          component, name, iconCls,
+                          keepAlive, requireAuth, parentId,
+                          enabled)
+        values (#{serverRoute,jdbcType=VARCHAR}, #{frontendRoute,jdbcType=VARCHAR},
+                #{component,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{iconcls,jdbcType=VARCHAR},
+                #{keepalive,jdbcType=BIT}, #{requireauth,jdbcType=BIT}, #{parentid,jdbcType=INTEGER},
+                #{enabled,jdbcType=BIT})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.zihong.sbhrm.pojo.Menu" >
+        insert into menu
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="url != null" >
+                url,
+            </if>
+            <if test="path != null" >
+                path,
+            </if>
+            <if test="component != null" >
+                component,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="iconcls != null" >
+                iconCls,
+            </if>
+            <if test="keepalive != null" >
+                keepAlive,
+            </if>
+            <if test="requireauth != null" >
+                requireAuth,
+            </if>
+            <if test="parentid != null" >
+                parentId,
+            </if>
+            <if test="enabled != null" >
+                enabled,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="url != null" >
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null" >
+                #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="component != null" >
+                #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="iconcls != null" >
+                #{iconcls,jdbcType=VARCHAR},
+            </if>
+            <if test="keepalive != null" >
+                #{keepalive,jdbcType=BIT},
+            </if>
+            <if test="requireauth != null" >
+                #{requireauth,jdbcType=BIT},
+            </if>
+            <if test="parentid != null" >
+                #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null" >
+                #{enabled,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.zihong.sbhrm.pojo.Menu" >
+        update menu
+        <set >
+            <if test="url != null" >
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="path != null" >
+                path = #{path,jdbcType=VARCHAR},
+            </if>
+            <if test="component != null" >
+                component = #{component,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="iconcls != null" >
+                iconCls = #{iconcls,jdbcType=VARCHAR},
+            </if>
+            <if test="keepalive != null" >
+                keepAlive = #{keepalive,jdbcType=BIT},
+            </if>
+            <if test="requireauth != null" >
+                requireAuth = #{requireauth,jdbcType=BIT},
+            </if>
+            <if test="parentid != null" >
+                parentId = #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="enabled != null" >
+                enabled = #{enabled,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.zihong.sbhrm.pojo.Menu" >
+        update menu
+        set serverRoute = #{serverRoute,jdbcType=VARCHAR},
+            frontendRoute = #{frontendRoute,jdbcType=VARCHAR},
+            component = #{component,jdbcType=VARCHAR},
+            name = #{name,jdbcType=VARCHAR},
+            iconCls = #{iconcls,jdbcType=VARCHAR},
+            keepAlive = #{keepalive,jdbcType=BIT},
+            requireAuth = #{requireauth,jdbcType=BIT},
+            parentId = #{parentid,jdbcType=INTEGER},
+            enabled = #{enabled,jdbcType=BIT}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

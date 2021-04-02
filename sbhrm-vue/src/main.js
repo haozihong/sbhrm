@@ -3,6 +3,7 @@ import App from './App.vue'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/display.css'
 
 import router from './router'
 
@@ -24,7 +25,8 @@ const store = new Vuex.Store({
     currentUser: {
       name: '',
       avatar: ''
-    }
+    },
+    routes: []
   },
   mutations: {
     setCurrentUser(state, user){
@@ -34,6 +36,9 @@ const store = new Vuex.Store({
     clearCurrentUser(state){
       state.currentUser = { name: '', avatar: '' };
       localStorage.removeItem('user');
+    },
+    setRoutes(state, routes) {
+      state.routes = routes;
     }
   }
 })
@@ -61,6 +66,7 @@ axios.interceptors.response.use(success => {
 }, error => {
   if (error.response.status === 401 || error.response.status === 403) {
     ElementUI.Message.error({message: error.response.data.msg ? error.response.data.msg : 'Please log in.'})
+    store.commit('clearCurrentUser')
     router.replace('/login');
   } else {
     if (error.response.data.msg) {
@@ -69,7 +75,6 @@ axios.interceptors.response.use(success => {
       ElementUI.Message.error({ message: `${error.response.status}: ${error.response.statusText}` })
     }
   }
-  return;
 })
 
 new Vue({

@@ -5,8 +5,18 @@
 </template>
 
 <style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  margin: 0;
+  background: #f7f9fc;
+}
+
+#app {
+  height: 100%;
 }
 </style>
