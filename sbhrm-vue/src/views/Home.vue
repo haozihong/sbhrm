@@ -5,7 +5,7 @@
         <el-menu router unique-opened v-if="$store.state.routes"  style="height: 100%">
           <el-submenu v-for="(item, index) in $store.state.routes" :index="'' + (index + 1)" :key="index">
             <template slot="title"><i :class="item.iconCls"></i>{{ item.name }}</template>
-            <el-menu-item v-for="(child, index2) in item.children" :index="child.frontendRoute" :key="index2">
+            <el-menu-item v-for="(child, index2) in item.children" :index="child.path" :key="index2">
               {{ child.name }}
             </el-menu-item>
           </el-submenu>
@@ -71,13 +71,15 @@
 </template>
 
 <script>
+import {initMenu} from '@/utils/menu';
+
 export default {
   name: 'Home',
   data: () => ({
     showMenu: false
   }),
   mounted() {
-    this.getMenuFromServer();
+    initMenu(this.$router, this.$store, this.axios);
   },
   methods: {
     handleCommand(command) {

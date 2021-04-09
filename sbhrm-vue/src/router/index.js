@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import HrList from "@/views/HrList";
 import Login from "@/views/Login";
 import UserInfo from "@/views/UserInfo";
 
@@ -19,16 +18,6 @@ const routes = [
     name: 'Home',
     component: Home,
     children: [
-      {
-        path: '/about',
-        name: 'About',
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-      },
-      {
-        path: '/hr/list',
-        name: 'All HR',
-        component: HrList
-      },
       {
         path: '/userinfo',
         name: 'UserInfo',
