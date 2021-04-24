@@ -36,6 +36,23 @@ public class MenuService {
         return menuTree;
     }
 
+    public Menu getEnabledMenuTreeWithChildrenByHrid(int hrid) {
+        Menu menuTree = menuMapper.getMenuTreeWithChildrenByHrid(hrid);
+        Queue<Menu> que = new LinkedList<>();
+        que.add(menuTree);
+        while (!que.isEmpty()) {
+            List<Menu> children = que.poll().getChildren();
+            for (int i = children.size() - 1; i >= 0; --i) {
+                if (children.get(i).getEnabled()) {
+                    if (children.get(i).getChildren().size() > 0) que.add(children.get(i));
+                } else {
+                    children.remove(i);
+                }
+            }
+        }
+        return menuTree;
+    }
+
     public List<Menu> getAllMenusWithRole() {
         return menuMapper.getAllMenusWithRole();
     }

@@ -21,9 +21,13 @@ public class MenuController {
     @Autowired
     MenuService menuService;
 
-    @GetMapping("/menuTree")
     public Menu getMenuTreeOfCurrentUser(Authentication authentication) {
         return menuService.getMenuTreeWithChildrenByHrid(((Hr) authentication.getPrincipal()).getId());
+    }
+
+    @GetMapping("/menuTree")
+    public Menu getEnabledMenuTreeOfCurrentUser(Authentication authentication) {
+        return menuService.getEnabledMenuTreeWithChildrenByHrid(((Hr) authentication.getPrincipal()).getId());
     }
 
     @GetMapping("/test/{hrid}")
