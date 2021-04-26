@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="hrs">
+    <el-table :data="hrs" :empty-text="tableEmptyText">
       <el-table-column width="100">
         <template slot-scope="scope">
           <img class="avatar-img" :src="scope.row.avatar" :alt="scope.row.name">
@@ -18,7 +18,8 @@ export default {
   name: "HrList",
   data() {
     return {
-      hrs: []
+      hrs: [],
+      tableEmptyText: "No Data"
     }
   },
   mounted() {
@@ -26,11 +27,13 @@ export default {
   },
   methods: {
     initAllHrs() {
+      this.tableEmptyText = "Fetching Data...";
       this.axios.get("/admin/hr").then(resp => {
         if (resp) {
           this.hrs = resp;
         }
-      })
+        this.tableEmptyText = "No Data";
+      });
     }
   }
 }

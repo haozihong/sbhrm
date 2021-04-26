@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="hrs">
+    <el-table :data="hrs" :empty-text="tableEmptyText">
       <el-table-column width="100">
         <template slot-scope="scope">
           <img class="avatar-img" :src="scope.row.avatar" :alt="scope.row.name">
@@ -13,7 +13,6 @@
         <template slot-scope="scope">
           <el-button
               size="mini"
-              type="primary"
               @click="loadHrInfoForm(scope.row); updateInfoDialogVisible = true">Update info</el-button>
           <el-button
               size="mini"
@@ -56,6 +55,7 @@ export default {
   data() {
     return {
       hrs: [],
+      tableEmptyText: "No Data",
       infoForm: { originalHr: null },
       updateInfoDialogVisible: false,
     }
@@ -65,11 +65,13 @@ export default {
   },
   methods: {
     initAllHrs() {
+      this.tableEmptyText = "Fetching Data...";
       this.axios.get("/admin/hr").then(resp => {
         if (resp) {
           this.hrs = resp;
         }
-      })
+        this.tableEmptyText = "No Data";
+      });
     },
     handleDelete(hr) {
       this.$confirm('Deleting **'+hr.name+'** permanently', 'Warning', {
