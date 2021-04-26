@@ -13,11 +13,40 @@
         <template slot-scope="scope">
           <el-button
               size="mini"
+              type="primary"
+              @click="loadHrInfoForm(scope.row); updateInfoDialogVisible = true">Update info</el-button>
+          <el-button
+              size="mini"
               type="danger"
               @click="handleDelete(scope.row)">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <!--Update user info form-->
+    <el-dialog title="Update user info" :visible.sync="updateInfoDialogVisible" width="30%">
+      <el-form v-if="infoForm" :model="infoForm" status-icon ref="infoForm" label-position="right" label-width="5rem">
+        <el-form-item label="Name">
+          <el-input v-model="infoForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="Phone">
+          <el-input type="tel" v-model="infoForm.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="Phone2">
+          <el-input type="tel" v-model="infoForm.telephone"></el-input>
+        </el-form-item>
+        <el-form-item label="Address">
+          <el-input type="textarea" v-model="infoForm.address"></el-input>
+        </el-form-item>
+        <el-form-item label="Avatar url">
+          <el-input type="url" v-model="infoForm.avatar"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="updateHrInfo">Update Info</el-button>
+          <el-button @click="reloadHrInfoForm">Reload</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -26,7 +55,9 @@ export default {
   name: "HrMng",
   data() {
     return {
-      hrs: []
+      hrs: [],
+      infoForm: { originalHr: null },
+      updateInfoDialogVisible: false,
     }
   },
   mounted() {
@@ -57,7 +88,25 @@ export default {
           message: 'Deleting cancelled'
         });
       });
-    }
+    },
+    loadHrInfoForm(hr) {
+      if (hr !== this.infoForm.originalHr) {
+        this.infoForm = Object.assign({}, hr);
+        this.infoForm.originalHr = hr;
+      }
+    },
+    reloadHrInfoForm() {
+      Object.assign(this.infoForm, this.infoForm.originalHr);
+      console.log(this.infoForm);
+    },
+    updateHrInfo() {
+      this.axios.put(`/admin/hr/${this.infoForm.id}`, this.infoForm).then(resp => {
+        if (resp) {
+          this.updateInfoDialogVisible = false;
+          this.initAllHrs();
+        }
+      })
+    },
   }
 }
 </script>
