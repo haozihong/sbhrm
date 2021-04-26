@@ -2,6 +2,7 @@ package com.zihong.sbhrm.controller;
 
 import com.zihong.sbhrm.pojo.Hr;
 import com.zihong.sbhrm.service.HrService;
+import com.zihong.sbhrm.utils.RespUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +39,17 @@ public class HrController {
         return 1;  // fail
     }
 
-    @PutMapping("")
-    public Integer updateHr(@RequestBody Hr hr) {
-        if (hrService.updateHr(hr) == 1) {
-            return 0;  // success
+    @PutMapping("/{id}")
+    public RespUtils updateHr(@RequestBody Hr hr, @PathVariable("id") Integer id) {
+        if (hr.getId() != null && !hr.getId().equals(id)) {
+            return RespUtils.error("[FAIL] wrong user id");
         }
-        return 1;  // fail
+        hr.setId(id);
+        hr.setPassword(null);
+        if (hrService.updateHr(hr) == 1) {
+            return RespUtils.ok("[SUCCESS] update user#" + hr.getUsername() + " info success");
+        }
+        return RespUtils.error("[FAIL] update#" + hr.getUsername() + " user info fail");
     }
 
     @DeleteMapping("/{id}")
