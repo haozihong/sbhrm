@@ -1,3 +1,5 @@
+import Home from '../views/Home.vue'
+
 export const initMenu = (router, store, axios) => {
   axios.get('/menu/menuTree').then(resp => {
     if (resp) {
@@ -31,9 +33,9 @@ export const formatRoutes = (routes) => {
       iconCls: iconCls,
       meta: meta,
       children: children,
-      component(resolve) {
-        require([`../views${frontendRoute.substr(0, frontendRoute.lastIndexOf(sep))}/${component}.vue`], resolve);
-      }
+      component: component ?
+        () => import(`@/views${frontendRoute.slice(0, frontendRoute.lastIndexOf(sep))}/${component}.vue`) :
+        Home
     }
     fmRoutes.push(fmRouter);
   })
