@@ -14,7 +14,9 @@
 
       <el-container>
         <el-header id="home-header">
-          <router-link class="title" to="/" tag="el-link">Quick HR</router-link>
+          <router-link to="/" custom v-slot="{ navigate }">
+            <el-link class="title" @click="navigate">Quick HR</el-link>
+          </router-link>
           <span>
             <i class="hidden-md-and-up fas fa-bars fa-2x"
                style="background: rgba(0,0,0,0); color: #5e6e82; cursor:pointer"
