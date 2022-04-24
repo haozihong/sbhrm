@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0ac382"],{1937:function(e,n,c){"use strict";c.r(n);var a=function(){var e=this,n=e.$createElement,c=e._self._c||n;return c("div",[e._v(" Payroll Query ")])},r=[],t={name:"SalSearch"},l=t,u=c("2877"),o=Object(u["a"])(l,a,r,!1,null,"375dc52c",null);n["default"]=o.exports}}]);
+//# sourceMappingURL=chunk-2d0ac382.0686fc56.js.map

@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0bd798"],{"2bc5":function(n,e,c){"use strict";c.r(e);var t=function(){var n=this,e=n.$createElement,c=n._self._c||e;return c("div",[n._v(" Payroll Account Sets ")])},a=[],l={name:"SalSob"},o=l,u=c("2877"),r=Object(u["a"])(o,t,a,!1,null,"affad77c",null);e["default"]=r.exports}}]);
+//# sourceMappingURL=chunk-2d0bd798.ab2f3217.js.map

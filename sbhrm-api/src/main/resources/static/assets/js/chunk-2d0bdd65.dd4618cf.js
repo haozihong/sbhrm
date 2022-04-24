@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0bdd65"],{"2e62":function(e,n,r){"use strict";r.r(n);var s=function(){var e=this,n=e.$createElement,r=e._self._c||n;return r("div",[e._v(" Personnel Transfer ")])},t=[],a={name:"HrTrans"},c=a,u=r("2877"),d=Object(u["a"])(c,s,t,!1,null,"2ed45800",null);n["default"]=d.exports}}]);
+//# sourceMappingURL=chunk-2d0bdd65.dd4618cf.js.map
