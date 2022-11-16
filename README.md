@@ -1,7 +1,7 @@
 # SBHRM
 A HR management software using Spring Boot
 
-### Deployed on Heroku: [https://sbhrm.herokuapp.com/](https://sbhrm.herokuapp.com/)
+### Deployed on **render**: [https://sbhrm.onrender.com/](https://sbhrm.onrender.com/)
 
 ---
 
